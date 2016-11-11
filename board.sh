@@ -1,4 +1,6 @@
 #!/bin/bash
+source util.sh
+
 
 function draw_board(){
   clear
@@ -16,18 +18,18 @@ function draw_board(){
             then
               echo -e -n "  "    
             else
-              echo -e -n "$k "
+              echo -e -n "${vetor[$k]} "
             fi
             
         elif [ $k -eq 0 ]
         then
           echo -e "\033[0m"
-          echo -e -n "${vetor[$i]} "
+          echo -e -n "$i "
         
         else
           c=`expr $((i+k)) %  2`
-          r=2
-
+          
+          r=$(getValue ${vetor[$k]} $i)
           if [ $c -eq 0 ]
           then
 
@@ -66,8 +68,5 @@ function draw_board(){
 
   
   done
-  echo -e "\033[0m"                         # Restores color settings
+  echo -e "\033[0m"  # Restores color settings
 }
-
-draw_board 
-
