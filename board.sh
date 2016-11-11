@@ -55,6 +55,10 @@ function draw_board(){
             fi
 
             tput setab 0
+            if [ $1 = ${vetor[$k]} ] && [ $2 -eq $i ]
+            then
+              tput setaf 1            
+            fi
             echo -n "$texto "   # Black background
 
           else
