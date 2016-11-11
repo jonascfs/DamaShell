@@ -51,20 +51,27 @@ function isCorrectPosition(){
 			#analisar se a coluna esta correta
 			if [ $num_col_nova -eq $(expr $num_col_atual - 1) ] || [ $num_col_nova -eq $(expr $num_col_atual + 1) ]; then
 				echo "true"
-		
+			else 
+				echo "false"
+			fi
 		elif [ $4 -eq $(expr $2 - 2) ] && [ $num_col_nova -eq $(expr $num_col_atual - 2) ]; then
 			linha_comida=$(expr $2 - 1)
 			ind_col=$(expr $num_col_atual - 1)
 			coluna_comida=${letras[$ind_col]}
 			if [ $(abs $(getValue $coluna_comida $linha_comida)) -eq  $JOGADOR2 ]; then
 				echo "true $coluna_comida $linha_comida"	
-
+			else 
+				echo "false"
+			fi
 		elif [ $4 -eq $(expr $2 - 2) ] && [ $num_col_nova -eq $(expr $num_col_atual + 2) ]; then
 			linha_comida=$(expr $2 - 1)
 			ind_col=$(expr $num_col_atual + 1)
 			coluna_comida=${letras[$ind_col]}
 			if [ $(abs $(getValue $coluna_comida $linha_comida)) -eq $JOGADOR2 ]; then
 				echo "true $coluna_comida $linha_comida"
+			else 
+				echo "false"
+			fi
 		else 
 			echo "false"
 		fi
@@ -74,22 +81,27 @@ function isCorrectPosition(){
 			#analisar se a coluna esta correta
 		    if [ $num_col_nova -eq $(expr $num_col_atual - 1) ]	|| [ $num_col_nova -eq $(expr $num_col_atual + 1) ]; then
 				echo "true"
+			else 
+				echo "false"
+			fi
 		elif [ $4 -eq $(expr $2 + 2) ] && [ $num_col_nova -eq $(expr $num_col_atual - 2) ]; then
 			linha_comida=$(expr $2 + 1)
 			ind_col=$(expr $num_col_atual - 1)
 			coluna_comida=${letras[$ind_col]}
 			if [ $(abs $(getValue $coluna_comida $linha_comida)) -eq  $JOGADOR1 ]; then 
 				echo "true $coluna_comida $linha_comida"
-			
-
+			else 
+				echo "false"
+			fi
 		elif [ $4 -eq $(expr $2 + 2) ] && [ $num_col_nova -eq $(expr $num_col_atual + 2) ]; then
 			linha_comida=$(expr $2 + 1)
 			ind_col=$(expr $num_col_atual + 1)
 			coluna_comida=${letras[$ind_col]}
 			if [ $(abs $(getValue $coluna_comida $linha_comida)) -eq  $JOGADOR1 ]; then
 				echo "true $coluna_comida $linha_comida"
-		else 
-			echo "false"
+			else 
+				echo "false"
+			fi
 		fi
 	fi
 
@@ -100,6 +112,7 @@ function isCorrectPosition(){
 function isCorrectMove(){
 	#$1 coluna atual, #$2 linha atual, #$3 nova coluna, #$4 nova linha, $5 jogador da vez
 	if  hasPosition $1 $2  && [ $(abs $(getValue $1 $2)) -eq $5 ] && isEmpty $3 $4   
+	then
 		isCorrectPosition $1 $2 $3 $4 $5
 	else
 		echo "false"

@@ -1,20 +1,34 @@
 #!/bin/bash
 source board.sh
 source util.sh
-source roles.sh
+source rules.sh
 initBoard
 jogada=0
 
 function jogar(){
-	if isCorrectMove $1 $2 $3 $4 $5
+	retorno=$(isCorrectMove $1 $2 $3 $4 $5)
+	validacao=$(echo $retorno | cut -f1 -d" ")
+	coluna=$(echo $retorno | cut -f2 -d" ")
+	linha=$(echo $retorno | cut -f3 -d" ")
+
+	if [ "$validacao" = "true" ]
 	then
 		peca=$(getValue $1 $2)
 		setValue $1 $2 0
 		setValue $3 $4 $peca
+
+		#Testa se há peça comida
+		if [ ! "$coluna" = "" ]
+		then
+			#Remove peça comida!
+			setValue $coluna $linha 0
+		fi
+
 		return 0
 	else
 		return 1
 	fi
+
 	
 }
 
@@ -48,8 +62,15 @@ do
 		printTurno 1
 		echo "Digite o destino: "
 		read ld nd
-
-		jogar $lo $no $ld $nd 1
+		
+		if jogar $lo $no $ld $nd 1
+		then
+			jogada=$(expr "$jogada" + 1)
+		else
+			echo "Jogada inválida!"
+			echo "Ex.: a 3"
+			read -p "Digite [ENTER] para continuar"
+		fi
 	else
 		printTurno 2
 		echo "Digite a origem: "
@@ -60,9 +81,16 @@ do
 		echo "Digite o destino: "
 		read ld nd
 
-		jogar $lo $no $ld $nd 2
+		if jogar $lo $no $ld $nd 2
+		then
+			jogada=$(expr "$jogada" + 1)
+		else
+			echo "Jogada inválida!"
+			echo "Ex.: a 3"
+			read -p "Digite [ENTER] para continuar"
+		fi
 	fi 
 
-	jogada=$(expr "$jogada" + 1)
+	
 
 done
