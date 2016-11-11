@@ -1,6 +1,5 @@
 #!/bin/bash
 source board.sh
-
 jogada=0
 
 while [ true ]
@@ -8,8 +7,11 @@ do
 	draw_board
 	if [ `expr $jogada % 2` -eq 0 ]
 	then
-		say "Vez do jogador 1"
-		echo "Vez do jogador 1"
+		printf "\nVez do jogador 1"
+		
+		tput setaf 130
+		echo " ⌨  "
+		echo -e "\033[0m"
 		echo "Digite a origem: "
 		read lo no
 		echo "Digite o destino: "
@@ -17,7 +19,9 @@ do
 
 		echo "$lo $no $ld $nd"
 	else
-		echo "Vez do jogador 2"
+		tput setaf 7
+		echo -e "\nVez do jogador 2 ⌨  "
+		echo -e "\033[0m"
 		echo "Digite a origem: "
 		read lo no
 		echo "Digite o destino: "
