@@ -1,12 +1,21 @@
 #!/bin/bash
 source board.sh
 source util.sh
+source roles.sh
+initBoard
 jogada=0
 
 function jogar(){
-	peca=$(getValue $1 $2)
-	setValue $1 $2 0
-	setValue $3 $4 $peca
+	if isCorrectMove $1 $2 $3 $4 $5
+	then
+		peca=$(getValue $1 $2)
+		setValue $1 $2 0
+		setValue $3 $4 $peca
+		return 0
+	else
+		return 1
+	fi
+	
 }
 
 function printTurno(){
