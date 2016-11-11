@@ -90,11 +90,11 @@ function isCorrectPosition(){
 
 function isCorrectMove(){
 	#$1 coluna atual, #$2 linha atual, #$3 nova coluna, #$4 nova linha, $5 jogador da vez
-	if [ isPosition $1 $2 ] && [ $(abs $(getValue $1 $2)) ==  $5 ] && [ isEmpty $3 $4 ]
-	then
-		return
+	return  [ isPosition $1 $2 ] && [ $(abs $(getValue $1 $2)) ==  $5 ] && 
+			[ isEmpty $3 $4 ] && [ isCorrectPosition $1 $2 $3 $4 $5 ]
+	
+		
 
-	fi
 
 }
 
