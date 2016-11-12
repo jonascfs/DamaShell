@@ -17,6 +17,14 @@ function abs(){
 	
 }
 
+function otherPlayer(){
+	if [ $1 -eq $JOGADOR1]; then
+		echo $JOGADOR2
+	else
+		echo $JOGADOR1
+	fi
+}
+
 #analisa se eh uma 
 function hasPosition(){
 	#$1 letra da coluna, $2 numero da linha
@@ -45,68 +53,59 @@ function isCorrectPosition(){
 	num_col_atual=${numeros[$1]}
 	num_col_nova=${numeros[$3]}
 
-	if [ $5 -eq $JOGADOR1 ]
+	if [ $5 -eq $JOGADOR1 ] && [ $4 -eq $(expr $2 - 1) ]
 	then
-		if [ $4 -eq $(expr $2 - 1) ]; then	
-			#analisar se a coluna esta correta
-			if [ $num_col_nova -eq $(expr $num_col_atual - 1) ] || [ $num_col_nova -eq $(expr $num_col_atual + 1) ]; then
-				echo "true"
-			else 
-				echo "false"
-			fi
-		elif [ $4 -eq $(expr $2 - 2) ] && [ $num_col_nova -eq $(expr $num_col_atual - 2) ]; then
-			linha_comida=$(expr $2 - 1)
-			ind_col=$(expr $num_col_atual - 1)
-			coluna_comida=${letras[$ind_col]}
-			if [ $(abs $(getValue $coluna_comida $linha_comida)) -eq  $JOGADOR2 ]; then
-				echo "true $coluna_comida $linha_comida"	
-			else 
-				echo "false"
-			fi
-		elif [ $4 -eq $(expr $2 - 2) ] && [ $num_col_nova -eq $(expr $num_col_atual + 2) ]; then
-			linha_comida=$(expr $2 - 1)
-			ind_col=$(expr $num_col_atual + 1)
-			coluna_comida=${letras[$ind_col]}
-			if [ $(abs $(getValue $coluna_comida $linha_comida)) -eq $JOGADOR2 ]; then
-				echo "true $coluna_comida $linha_comida"
-			else 
-				echo "false"
-			fi
+		if [ $num_col_nova -eq $(expr $num_col_atual - 1) ] || [ $num_col_nova -eq $(expr $num_col_atual + 1) ]; then
+			echo "true"
 		else 
 			echo "false"
 		fi
-
-	else
-		if [ $4 -eq $(expr $2 + 1) ]; then
-			#analisar se a coluna esta correta
-		    if [ $num_col_nova -eq $(expr $num_col_atual - 1) ]	|| [ $num_col_nova -eq $(expr $num_col_atual + 1) ]; then
-				echo "true"
-			else 
-				echo "false"
-			fi
-		elif [ $4 -eq $(expr $2 + 2) ] && [ $num_col_nova -eq $(expr $num_col_atual - 2) ]; then
-			linha_comida=$(expr $2 + 1)
-			ind_col=$(expr $num_col_atual - 1)
-			coluna_comida=${letras[$ind_col]}
-			if [ $(abs $(getValue $coluna_comida $linha_comida)) -eq  $JOGADOR1 ]; then 
-				echo "true $coluna_comida $linha_comida"
-			else 
-				echo "false"
-			fi
-		elif [ $4 -eq $(expr $2 + 2) ] && [ $num_col_nova -eq $(expr $num_col_atual + 2) ]; then
-			linha_comida=$(expr $2 + 1)
-			ind_col=$(expr $num_col_atual + 1)
-			coluna_comida=${letras[$ind_col]}
-			if [ $(abs $(getValue $coluna_comida $linha_comida)) -eq  $JOGADOR1 ]; then
-				echo "true $coluna_comida $linha_comida"
-			else 
-				echo "false"
-			fi
+	elif [ $5 -eq $JOGADOR2 ] && [ $4 -eq $(expr $2 + 1) ]; then
+		if [ $num_col_nova -eq $(expr $num_col_atual - 1) ]	|| [ $num_col_nova -eq $(expr $num_col_atual + 1) ]; then
+			echo "true"
+		else 
+			echo "false"
 		fi
+	elif [ $4 -eq $(expr $2 - 2) ] && [ $num_col_nova -eq $(expr $num_col_atual - 2) ]; then
+		linha_comida=$(expr $2 - 1)
+		ind_col=$(expr $num_col_atual - 1)
+		coluna_comida=${letras[$ind_col]}
+		if [ $(abs $(getValue $coluna_comida $linha_comida)) -eq  $(otherPlayer $5) ]; then
+			echo "true $coluna_comida $linha_comida"	
+		else 
+			echo "false"
+		fi
+	elif [ $4 -eq $(expr $2 - 2) ] && [ $num_col_nova -eq $(expr $num_col_atual + 2) ]; then
+		linha_comida=$(expr $2 - 1)
+		ind_col=$(expr $num_col_atual + 1)
+		coluna_comida=${letras[$ind_col]}
+		if [ $(abs $(getValue $coluna_comida $linha_comida)) -eq $(otherPlayer $5) ]; then
+			echo "true $coluna_comida $linha_comida"
+		else 
+			echo "false"
+		fi
+	elif [ $4 -eq $(expr $2 + 2) ] && [ $num_col_nova -eq $(expr $num_col_atual - 2) ]; then
+		linha_comida=$(expr $2 + 1)
+		ind_col=$(expr $num_col_atual - 1)
+		coluna_comida=${letras[$ind_col]}
+		if [ $(abs $(getValue $coluna_comida $linha_comida)) -eq  $(otherPlayer $5) ]; then
+			echo "true $coluna_comida $linha_comida"	
+		else 
+			echo "false"
+		fi
+	elif [ $4 -eq $(expr $2 + 2) ] && [ $num_col_nova -eq $(expr $num_col_atual + 2) ]; then
+		linha_comida=$(expr $2 + 1)
+		ind_col=$(expr $num_col_atual + 1)
+		coluna_comida=${letras[$ind_col]}
+		if [ $(abs $(getValue $coluna_comida $linha_comida)) -eq $(otherPlayer $5) ]; then
+			echo "true $coluna_comida $linha_comida"
+		else 
+			echo "false"
+		fi
+	else 
+		echo "false"
 	fi
-
-	
-
+		
 }
 
 function isCorrectMove(){
@@ -117,9 +116,6 @@ function isCorrectMove(){
 	else
 		echo "false"
 	fi
-
-		
-
 
 }
 
