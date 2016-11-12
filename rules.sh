@@ -62,6 +62,12 @@ function hasFood(){
 
 }
 
+function damaMove(){
+	#$1 coluna atual, #$2 linha atual, #$3 nova coluna, #$4 nova linha, $5 jogador da vez
+
+	pieces=getDiagonalPieces $1 $2 $3 $4
+}
+
 
 #analisa se a posicao da nova jogada eh uma posicao da diagonal correta
 #Eh assumido que ja foi verificado se a celula eh vazia e as posicoes sao validas
@@ -154,28 +160,3 @@ function isEmpty(){
 		return 1
 	fi
 }
-
-
-# while [[ true ]]; do
-# 	read x
-
-	# read y
-	# if hasPosition $x $y 
-	# if isEmpty 1 2
-	# 	then
-	# 		echo "true"
-	# 	else 
-	# 		echo "false"
-	# fi
-#done
-
-#if isCorrectMove b 6 a 5 1
-# if isCorrectPosition b 6 a 5 1 
-# then
-# 	echo "foi :)"
-# else
-# 	echo "não :("
-# fi
-
-hasFood e 3 1
-echo "$?"
