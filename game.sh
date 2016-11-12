@@ -132,6 +132,18 @@ function MENU_JOGADOR(){
 	fi
 }
 
+function MENU_VENCEU(){
+	say "You Win!"
+	clear
+	if [ $1 -eq 0 ]
+	then
+		tput setaf 2; cat jogador_1_venceu.txt
+	else
+		tput setaf 2; cat jogador_2_venceu.txt
+	fi
+	
+}
+
 function DAMA(){
 	while [ true ]
 	do
@@ -143,15 +155,15 @@ function DAMA(){
 			MENU_JOGADOR 1
 			v=$(victory 1)
 			if [ "$v" = "victory" ]; then
-				echo "JOGADOR 1 VENCEU!"
-				 break
+				MENU_VENCEU 1
+				break
 			fi
 		else
 			MENU_JOGADOR 2
 			v=$(victory 2)
 			if [ "$v" = "victory" ]; then
-				echo "JOGADOR 1 VENCEU!"
-				 break
+				MENU_VENCEU 1
+				break
 			fi
 		fi
 	done
