@@ -48,18 +48,22 @@ setValue(){
 
 getDiagonalPieces(){
 	#return all pieces on the diagonal between positions b = beign, e = end
+	#the return(separeted by " "): value from 1ºposition 2ºposition pieces beetween(withot 0)
 	awk -v bcol=$1 -v brow=$2 -v ecol=$3 -v erow=$4 'BEGIN{
 		letras["a"] = 1;letras["b"] = 2;letras["c"] = 3;letras["d"] = 4;
 		letras["e"] = 5;letras["f"] = 6;letras["g"] = 7;letras["h"] = 8;
 		i=0;
 	}{
 		if(brow < erow){
+			upSideDown = "false";
 			if(letras[bcol] < letras[ecol]){
 				if(NR>=brow && NR <= erow){
 					for(k in letras)
 						if (letras[bcol] + i == letras[k]){
 							#print k,NR
-							pieces[i] = $(letras[bcol]+i)
+							pieces[i] = $(letras[bcol]+i);
+							lastR = NR;
+							lastC = k;
 						}
 					i++				
 				}
@@ -68,19 +72,24 @@ getDiagonalPieces(){
 					for(k in letras){
 						if (letras[bcol] - i == letras[k]){
 							#print k,NR
-							pieces[i] = $(letras[bcol]-i)
+							pieces[i] = $(letras[bcol]-i);
+							lastR = NR;
+							lastC = k;
 						}	
 					}
 					i++				
 				}			
 			}
 		}else if (brow > erow){
+			upSideDown = "true";
 			if(letras[bcol] < letras[ecol]){
 				if(NR<=brow && NR >=erow){
 					for(k in letras)
 						if (letras[ecol] - i == letras[k]){
 							#print k,NR
-							pieces[i] = $(letras[bcol]-i)
+							pieces[i] = $(letras[ecol]-i);
+							lastR = NR;
+							lastC = k;
 						}						
 					i++				
 				}
@@ -88,14 +97,33 @@ getDiagonalPieces(){
 				if(NR<=brow && NR >=erow){					
 					for(k in letras){
 						if (letras[ecol] + i == letras[k]){
-							#print k,NR
-							pieces[i] = $(letras[bcol]+i)						
+							#print k,NR;
+							pieces[i] = $(letras[ecol]+i);
+							lastR = NR;
+							lastC = k;
 						}
 					}
 					i++				
 				}			
 			}
 		}
+	}END{	
+		if(upSideDown == "false" && lastR == erow && lastC == ecol){
+			printf("%d %d ",pieces[0], pieces[i-1]);
+			for(j=1;j<i-1;j++){
+				if(pieces[j] != 0)
+					printf("%d ", pieces[j]);
+			}
+			printf("\n");
+		}else if(upSideDown == "true" && lastR == brow && lastC == bcol){
+			printf("%d %d ",pieces[i-1], pieces[0]);
+			for(j=i-2;j>0;j--){
+				if(pieces[j] != 0)
+					printf("%d ", pieces[j]);
+			}
+			printf("\n");
+		}
+		
 	}' board.txt
 }
 
@@ -113,33 +141,6 @@ countPieces(){
 		print counter		
 	}' board.txt
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #
 #
