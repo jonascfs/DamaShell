@@ -10,7 +10,7 @@ function jogar(){
 	validacao=$(echo $retorno | cut -f1 -d" ")
 	coluna=$(echo $retorno | cut -f2 -d" ")
 	linha=$(echo $retorno | cut -f3 -d" ")
-
+	echo "retorno $retorno"
 	if [ "$validacao" = "true" ]
 	then
 		peca=$(getValue $1 $2)
@@ -18,10 +18,27 @@ function jogar(){
 		setValue $3 $4 $peca
 
 		#Testa se há peça comida
-		if [ ! "$coluna" = "" ]
+		echo "coluna $coluna"
+		if [ ! $coluna = "true" ]
 		then
 			#Remove peça comida!
 			setValue $coluna $linha 0
+			draw_board "_" 0
+			read -p "Deseja continuar a jogar? [s-sim n-não ] " continuar
+			if [ $continuar = "s" ]
+			then
+				jogada=$(expr "$jogada" + 1)
+			fi
+			
+		fi
+
+		#Verifica se é dama e muda a peça
+		if [ $5 -eq 1 ] && [ $4 -eq 1 ]
+		then
+			setValue $3 $4 -1
+		elif [ $5 -eq 2 ] && [ $4 -eq 8 ]
+		then
+			setValue $3 $4 -2
 		fi
 
 		return 0
