@@ -101,6 +101,7 @@ getDiagonalPieces(){
 
 countPieces(){
 	awk -v p=$1 'BEGIN{
+		counter=0
 		letras["a"] = 1;letras["b"] = 2;letras["c"] = 3;letras["d"] = 4;
 		letras["e"] = 5;letras["f"] = 6;letras["g"] = 7;letras["h"] = 8;
 	}{
