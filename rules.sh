@@ -35,6 +35,34 @@ function hasPosition(){
 	fi
 }
 
+function hasFood(){
+	#$1 coluna atual, $2 linha atual, $3 jogador
+	declare -a letras
+	declare -A numeros	
+	letras=(x a b c d e f g h)
+	n="0"
+
+	for i in ${letras[@]}
+	do
+		numeros[$i]=$n
+		n=$(expr $n + 1)	
+	done
+	num_col_atual=${numeros[$1]}
+	if [ isEmpty $(expr $num_col_atual - 2) $(expr $2 - 2) ] && [ $(abs $(getValue ${letras[$(expr $num_col_atual - 1)]} $(expr $2 - 1))) -eq  $(otherPlayer $3) ]; then
+		return 0
+	elif [ isEmpty $(expr $num_col_atual - 2) $(expr $2 + 2) ] && [ $(abs $(getValue ${letras[$(expr $num_col_atual - 1)]} $(expr $2 + 1))) -eq  $(otherPlayer $3) ]; then
+		return 0
+	elif [ isEmpty $(expr $num_col_atual + 2) $(expr $2 - 2) ] && [ $(abs $(getValue ${letras[$(expr $num_col_atual + 1)]} $(expr $2 - 1))) -eq  $(otherPlayer $3) ]; then
+		return 0
+	elif [ isEmpty $(expr $num_col_atual + 2) $(expr $2 + 2) ] && [ $(abs $(getValue ${letras[$(expr $num_col_atual + 1)]} $(expr $2 + 1))) -eq  $(otherPlayer $3) ]; then
+		return 0
+	else 
+		return 1
+	fi
+
+}
+
+
 #analisa se a posicao da nova jogada eh uma posicao da diagonal correta
 #Eh assumido que ja foi verificado se a celula eh vazia e as posicoes sao validas
 function isCorrectPosition(){
