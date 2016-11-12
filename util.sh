@@ -64,6 +64,8 @@ getDiagonalPieces(){
 							pieces[i] = $(letras[bcol]+i);
 							lastR = NR;
 							lastC = k;
+							coordC[i] = k;
+							coordR[i] = NR;
 						}
 					i++				
 				}
@@ -75,6 +77,8 @@ getDiagonalPieces(){
 							pieces[i] = $(letras[bcol]-i);
 							lastR = NR;
 							lastC = k;
+							coordC[i] = k;
+							coordR[i] = NR;
 						}	
 					}
 					i++				
@@ -90,6 +94,8 @@ getDiagonalPieces(){
 							pieces[i] = $(letras[ecol]-i);
 							lastR = NR;
 							lastC = k;
+							coordC[i] = k;
+							coordR[i] = NR;
 						}						
 					i++				
 				}
@@ -101,6 +107,8 @@ getDiagonalPieces(){
 							pieces[i] = $(letras[ecol]+i);
 							lastR = NR;
 							lastC = k;
+							coordC[i] = k;
+							coordR[i] = NR;
 						}
 					}
 					i++				
@@ -112,14 +120,14 @@ getDiagonalPieces(){
 			printf("%d %d ",pieces[0], pieces[i-1]);
 			for(j=1;j<i-1;j++){
 				if(pieces[j] != 0)
-					printf("%d ", pieces[j]);
+					printf("%d_%s_%d ", pieces[j],coordC[j],coordR[j]);
 			}
 			printf("\n");
 		}else if(upSideDown == "true" && lastR == brow && lastC == bcol){
 			printf("%d %d ",pieces[i-1], pieces[0]);
 			for(j=i-2;j>0;j--){
 				if(pieces[j] != 0)
-					printf("%d ", pieces[j]);
+					printf("%d_%s_%d ", pieces[j],coordC[j],coordR[j]);
 			}
 			printf("\n");
 		}
