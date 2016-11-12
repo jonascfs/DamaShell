@@ -2,7 +2,7 @@
 source board.sh
 source util.sh
 source rules.sh
-initBoard
+#initBoard
 jogada=0
 
 function jogar(){
@@ -90,31 +90,35 @@ do
 
 		else
 			
-			while [ ! $novaLinhaOrigem = "true" ]
-			do
-				#Comeu uma peça na ultima jogada
-				draw_board $novaColunaOrigem $novaLinhaOrigem
-				read -p "Deseja continuar a jogar? [s-sim n-não ] " seguir
-				if [ $seguir = "s" ]
-				then
-					echo "Digite o destino: "
-					read nld nnd
-					saida=$(jogar $novaColunaOrigem $novaLinhaOrigem $nld $nnd 1)
-					echo "$saida"
-					continuar=$(echo "$saida" | cut -f1 -d" " )
-					novaColunaOrigem=$(echo "$saida" | cut -f2 -d" " )
-					novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
-					else
-						#Para sair do laço
-						novaLinhaOrigem=$(echo "true")		
-				fi
-			done
+			if [ $(echo "$saida" | wc -w ) -eq 3 ]
+			then
+
+				while hasFood $novaColunaOrigem $novaLinhaOrigem 1
+				do
+					#Comeu uma peça na ultima jogada
+					draw_board $novaColunaOrigem $novaLinhaOrigem
+					read -p "Deseja continuar a jogar? [s-sim n-não ] " seguir
+					if [ $seguir = "s" ]
+					then
+						echo "Digite o destino: "
+						read nld nnd
+						saida=$(jogar $novaColunaOrigem $novaLinhaOrigem $nld $nnd 1)
+						echo "$saida"
+						continuar=$(echo "$saida" | cut -f1 -d" " )
+						novaColunaOrigem=$(echo "$saida" | cut -f2 -d" " )
+						novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
+						else
+							#Para sair do laço
+							novaLinhaOrigem=$(echo "true")		
+					fi
+				done
+			
+			fi
+
 			#proximo jogador
 			jogada=$(expr "$jogada" + 1)
 		fi
-
-
-
+		
 	else
 		printTurno 2
 		echo "Digite a origem: "
@@ -138,26 +142,30 @@ do
 			read -p "Digite [ENTER] para continuar"
 
 		else
-			while [ ! $novaLinhaOrigem = "true" ]
-			do
-				#Comeu uma peça na ultima jogada
-				draw_board $novaColunaOrigem $novaLinhaOrigem
-				read -p "Deseja continuar a jogar? [s-sim n-não ] " seguir
-				if [ $seguir = "s" ]
-				then
-					echo "Digite o destino: "
-					read nld nnd
-					saida=$(jogar $novaColunaOrigem $novaLinhaOrigem $nld $nnd 2)
-					echo "$saida"
-					continuar=$(echo "$saida" | cut -f1 -d" " )
-					novaColunaOrigem=$(echo "$saida" | cut -f2 -d" " )
-					novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
-				else
-					#Para sair do laço
-					novaLinhaOrigem=$(echo "true")
-				fi
+			
+			if [ $(echo "$saida" | wc -w ) -eq 3 ]
+			then
+				while hasFood $novaColunaOrigem $novaLinhaOrigem 2
+				do
+					#Comeu uma peça na ultima jogada
+					draw_board $novaColunaOrigem $novaLinhaOrigem
+					read -p "Deseja continuar a jogar? [s-sim n-não ] " seguir
+					if [ $seguir = "s" ]
+					then
+						echo "Digite o destino: "
+						read nld nnd
+						saida=$(jogar $novaColunaOrigem $novaLinhaOrigem $nld $nnd 2)
+						echo "$saida"
+						continuar=$(echo "$saida" | cut -f1 -d" " )
+						novaColunaOrigem=$(echo "$saida" | cut -f2 -d" " )
+						novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
+					else
+						#Para sair do laço
+						novaLinhaOrigem=$(echo "true")
+					fi
 
-			done
+				done
+			fi
 			#proximo jogador
 			jogada=$(expr "$jogada" + 1)
 		fi
