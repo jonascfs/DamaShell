@@ -18,7 +18,7 @@ function abs(){
 }
 
 function otherPlayer(){
-	if [ $1 -eq $JOGADOR1]; then
+	if [ $1 -eq $JOGADOR1 ]; then
 		echo $JOGADOR2
 	else
 		echo $JOGADOR1

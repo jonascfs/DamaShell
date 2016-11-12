@@ -10,26 +10,22 @@ function jogar(){
 	validacao=$(echo $retorno | cut -f1 -d" ")
 	coluna=$(echo $retorno | cut -f2 -d" ")
 	linha=$(echo $retorno | cut -f3 -d" ")
-	echo "retorno $retorno"
+
 	if [ "$validacao" = "true" ]
 	then
+		printf "true"
+
 		peca=$(getValue $1 $2)
 		setValue $1 $2 0
 		setValue $3 $4 $peca
 
 		#Testa se há peça comida
-		echo "coluna $coluna"
 		if [ ! $coluna = "true" ]
 		then
+			# retorna destino da peça que comeu
+			printf " $3 $4"
 			#Remove peça comida!
 			setValue $coluna $linha 0
-			draw_board "_" 0
-			read -p "Deseja continuar a jogar? [s-sim n-não ] " continuar
-			if [ $continuar = "s" ]
-			then
-				jogada=$(expr "$jogada" + 1)
-			fi
-			
 		fi
 
 		#Verifica se é dama e muda a peça
@@ -41,9 +37,8 @@ function jogar(){
 			setValue $3 $4 -2
 		fi
 
-		return 0
 	else
-		return 1
+		echo "false"
 	fi
 
 	
@@ -80,14 +75,46 @@ do
 		echo "Digite o destino: "
 		read ld nd
 		
-		if jogar $lo $no $ld $nd 1
+		saida=$(jogar $lo $no $ld $nd 1)
+		echo "$saida"
+		continuar=$(echo "$saida" | cut -f1 -d" " )
+		novaColunaOrigem=$(echo "$saida" | cut -f2 -d" " )
+		novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
+
+
+		if [ "$continuar" = "false" ]
 		then
-			jogada=$(expr "$jogada" + 1)
-		else
 			echo "Jogada inválida!"
 			echo "Ex.: a 3"
 			read -p "Digite [ENTER] para continuar"
+
+		else
+			
+			while [ ! $novaLinhaOrigem = "true" ]
+			do
+				#Comeu uma peça na ultima jogada
+				draw_board $novaColunaOrigem $novaLinhaOrigem
+				read -p "Deseja continuar a jogar? [s-sim n-não ] " seguir
+				if [ $seguir = "s" ]
+				then
+					echo "Digite o destino: "
+					read nld nnd
+					saida=$(jogar $novaColunaOrigem $novaLinhaOrigem $nld $nnd 1)
+					echo "$saida"
+					continuar=$(echo "$saida" | cut -f1 -d" " )
+					novaColunaOrigem=$(echo "$saida" | cut -f2 -d" " )
+					novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
+					else
+						#Para sair do laço
+						novaLinhaOrigem=$(echo "true")		
+				fi
+			done
+			#proximo jogador
+			jogada=$(expr "$jogada" + 1)
 		fi
+
+
+
 	else
 		printTurno 2
 		echo "Digite a origem: "
@@ -97,14 +124,42 @@ do
 		printTurno 2
 		echo "Digite o destino: "
 		read ld nd
+		
+		saida=$(jogar $lo $no $ld $nd 2)
+		continuar=$(echo "$saida" | cut -f1 -d" " )
+		novaColunaOrigem=$(echo "$saida" | cut -f2 -d" " )
+		novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
 
-		if jogar $lo $no $ld $nd 2
+
+		if [ "$continuar" = "false" ]
 		then
-			jogada=$(expr "$jogada" + 1)
-		else
 			echo "Jogada inválida!"
 			echo "Ex.: a 3"
 			read -p "Digite [ENTER] para continuar"
+
+		else
+			while [ ! $novaLinhaOrigem = "true" ]
+			do
+				#Comeu uma peça na ultima jogada
+				draw_board $novaColunaOrigem $novaLinhaOrigem
+				read -p "Deseja continuar a jogar? [s-sim n-não ] " seguir
+				if [ $seguir = "s" ]
+				then
+					echo "Digite o destino: "
+					read nld nnd
+					saida=$(jogar $novaColunaOrigem $novaLinhaOrigem $nld $nnd 2)
+					echo "$saida"
+					continuar=$(echo "$saida" | cut -f1 -d" " )
+					novaColunaOrigem=$(echo "$saida" | cut -f2 -d" " )
+					novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
+				else
+					#Para sair do laço
+					novaLinhaOrigem=$(echo "true")
+				fi
+
+			done
+			#proximo jogador
+			jogada=$(expr "$jogada" + 1)
 		fi
 	fi 
 
