@@ -27,9 +27,11 @@ function otherPlayer(){
 #analisa se eh uma 
 function hasPosition(){
 	#$1 letra da coluna, $2 numero da linha
-	if [[ "$1" =~ [a-h] ]] && [[ $2 =~ [1-8] ]]; then
+	if [[ "$1" =~ [a-h] ]] && [ $(echo "$1" | wc -c) -eq 2 ] && [ $2 -ge 1 ] && [ $2 -le 8 ]; then
+		echo "hasPosition $1 $2 true" >> teste
 		return 0 #true		
 	else
+		echo "hasPosition $1 $2 false" >> teste
 		return 1 #false
 	fi
 }

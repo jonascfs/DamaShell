@@ -16,7 +16,8 @@ done
 function hasThreat (){
 	#$1 col, $2 linha, $3 jogador, $4 col_coordenada, $5 linha_coordenada
 	num_col_atual=${numeros[$1]}
-	if hasPosition ${letras[$(expr $num_col_atual + $4)]} $(expr $2 + $5) && [ $(abs $(getValue ${letras[$(expr $num_col_atual + $4)]} $(expr $2 + $4))) -eq  $(otherPlayer $3) ] && isEmpty ${letras[$(expr $num_col_atual - $4)]} $(expr $2 - $5); then
+	#echo "$1 $2 $3 $4 $5 , ad: ${letras[$(expr $num_col_atual + $4)]} $(expr $2 + $5) - jog_ad: ${letras[$(expr $num_col_atual - $4)]} $(expr $2 - $5)" >> teste.txt
+	if hasPosition ${letras[$(expr $num_col_atual + $4)]} $(expr $2 + $5) && [ $(abs $(getValue ${letras[$(expr $num_col_atual + $4)]} $(expr $2 + $5))) -eq  $(otherPlayer $3) ] && isEmpty ${letras[$(expr $num_col_atual - $4)]} $(expr $2 - $5); then
 		return 0
 	else 
 		return 1
@@ -24,18 +25,18 @@ function hasThreat (){
 } 
 
 function getMoves(){
-	#$1 col, $2 linha
+	#$1 col, $2 linha, $3 jogador
 	num_col_atual=${numeros[$1]}
-	if isEmpty ${letras[$(expr $num_col_atual + 1)]} $(expr $2 + 1) ; then
+	if isEmpty ${letras[$(expr $num_col_atual + 1)]} $(expr $2 + 1) && [ $3 -eq 2 ]; then
 		echo -e "${letras[$(expr $num_col_atual + 1)]} $(expr $2 + 1)\n"	
 	fi
-	if isEmpty ${letras[$(expr $num_col_atual + 1)]} $(expr $2 - 1) ; then
+	if isEmpty ${letras[$(expr $num_col_atual + 1)]} $(expr $2 - 1) && [ $3 -eq 1 ]; then
 		echo -e "${letras[$(expr $num_col_atual + 1)]} $(expr $2 - 1)\n"
 	fi
-	if isEmpty ${letras[$(expr $num_col_atual - 1)]} $(expr $2 + 1) ; then
+	if isEmpty ${letras[$(expr $num_col_atual - 1)]} $(expr $2 + 1) && [ $3 -eq 2 ]; then
 		echo -e "${letras[$(expr $num_col_atual - 1)]} $(expr $2 + 1)\n"
 	fi
-	if isEmpty ${letras[$(expr $num_col_atual - 1)]} $(expr $2 - 1) ; then
+	if isEmpty ${letras[$(expr $num_col_atual - 1)]} $(expr $2 - 1) && [ $3 -eq 1 ]; then
 		echo -e "${letras[$(expr $num_col_atual - 1)]} $(expr $2 - 1)\n"
 	fi
 }
@@ -58,16 +59,17 @@ function isFood(){
 function getFoods(){
 	#$1 coluna, $2 linha, $3 jogador	
 	num_col_atual=${numeros[$1]}
-	if isEmpty ${letras[$(expr $num_col_atual - 2)]} $(expr $2 - 2) && [ $(abs $(getValue ${letras[$(expr $num_col_atual - 1)]} $(expr $2 - 1))) -eq  $(otherPlayer $3) ]; then
+	echo "${letras[$(expr $num_col_atual - 2)]} $(expr $2 - 2)" >> teste
+	if [ $(expr $num_col_atual - 2) -gt 0 ] && [ $(expr $num_col_atual - 2) -lt 9 ] && isEmpty ${letras[$(expr $num_col_atual - 2)]} $(expr $2 - 2) && [ $(abs $(getValue ${letras[$(expr $num_col_atual - 1)]} $(expr $2 - 1))) -eq  $(otherPlayer $3) ]; then
 		echo -e "${letras[$(expr $num_col_atual - 2)]} $(expr $2 - 2) ${letras[$(expr $num_col_atual - 1)]} $(expr $2 - 1)\n"
 	fi
-	if isEmpty ${letras[$(expr $num_col_atual - 2)]} $(expr $2 + 2) && [ $(abs $(getValue ${letras[$(expr $num_col_atual - 1)]} $(expr $2 + 1))) -eq  $(otherPlayer $3) ]; then
+	if [ $(expr $num_col_atual - 2) -gt 0 ] && [ $(expr $num_col_atual - 2) -lt 9 ] && isEmpty ${letras[$(expr $num_col_atual - 2)]} $(expr $2 + 2) && [ $(abs $(getValue ${letras[$(expr $num_col_atual - 1)]} $(expr $2 + 1))) -eq  $(otherPlayer $3) ]; then
 		echo -e "${letras[$(expr $num_col_atual - 2)]} $(expr $2 + 2) ${letras[$(expr $num_col_atual - 1)]} $(expr $2 + 1)\n"
 	fi
-	if isEmpty ${letras[$(expr $num_col_atual + 2)]} $(expr $2 - 2) && [ $(abs $(getValue ${letras[$(expr $num_col_atual + 1)]} $(expr $2 - 1))) -eq  $(otherPlayer $3) ]; then
+	if [ $(expr $num_col_atual + 2) -gt 0 ] && [ $(expr $num_col_atual + 2) -lt 9 ] && isEmpty ${letras[$(expr $num_col_atual + 2)]} $(expr $2 - 2) && [ $(abs $(getValue ${letras[$(expr $num_col_atual + 1)]} $(expr $2 - 1))) -eq  $(otherPlayer $3) ]; then
 		echo -e "${letras[$(expr $num_col_atual + 2)]} $(expr $2 - 2) ${letras[$(expr $num_col_atual + 1)]} $(expr $2 - 1)\n"
 	fi
-	if isEmpty ${letras[$(expr $num_col_atual + 2)]} $(expr $2 + 2) && [ $(abs $(getValue ${letras[$(expr $num_col_atual + 1)]} $(expr $2 + 1))) -eq  $(otherPlayer $3) ]; then
+	if [ $(expr $num_col_atual + 2) -gt 0 ] && [ $(expr $num_col_atual + 2) -lt 9 ] && isEmpty ${letras[$(expr $num_col_atual + 2)]} $(expr $2 + 2) && [ $(abs $(getValue ${letras[$(expr $num_col_atual + 1)]} $(expr $2 + 1))) -eq  $(otherPlayer $3) ]; then
 		echo -e "${letras[$(expr $num_col_atual + 2)]} $(expr $2 + 2) ${letras[$(expr $num_col_atual + 1)]} $(expr $2 + 1)\n"
 	fi
 	
