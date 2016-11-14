@@ -2,7 +2,7 @@
 source board.sh
 source util.sh
 source rules.sh
-initBoard
+#initBoard
 jogada=0
 
 function jogar(){
