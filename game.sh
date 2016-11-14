@@ -102,7 +102,7 @@ function MENU_JOGADOR(){
 	if [ "$continuar" = "false" ]
 	then
 		echo "Jogada inválida!"
-		echo "Ex.: a 3"
+		echo "Ex.: a3"
 		read -p "Digite [ENTER] para continuar"
 	else
 		
@@ -117,7 +117,10 @@ function MENU_JOGADOR(){
 				if [ $seguir = "s" ]
 				then
 					echo "Digite o destino: "
-					read nld nnd
+					read norigem
+					nld=$(echo $norigem | cut -c1)
+					nnd=$(echo $norigem | cut -c2)
+
 					saida=$(jogar $novaColunaOrigem $novaLinhaOrigem $nld $nnd $1)
 					echo "$saida"
 					continuar=$(echo "$saida" | cut -f1 -d" " )
@@ -128,7 +131,7 @@ function MENU_JOGADOR(){
 					    novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
 					else
 						echo "Jogada inválida!"
-						echo "Ex.: a 3"
+						echo "Ex.: a3"
 						read -p "Digite [ENTER] para continuar"
 					fi
 				else
@@ -207,7 +210,7 @@ function opcoes(){
 
 	echo "Escolha uma das opções"
 	echo "1 - JOGAR"
-	echo "2 - REGRAS/INSTRUNÇÕES"
+	echo "2 - REGRAS/INSTRUÇÕES"
 	echo "3 - EQUIPE"
 	echo "4 - SAIR"
 }
