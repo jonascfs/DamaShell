@@ -191,12 +191,14 @@ possibleEatingPositions(){
 				current =$i>=0?$i:-1*$i;
 				#D1				
 				if(i == letras[col] - (row - NR)){
-					valuesD1[NR] = current;
-					columnsD1[NR] = i;
+					countD1++;
+					valuesD1[countD1] = current;
+					columnsD1[countD1] = i;
 				#D2
 				}else if(i == letras[col] + (row - NR)){
-					valuesD2[NR] = current;
-					columnsD2[NR] = i;
+					countD2++;
+					valuesD2[countD2] = current;
+					columnsD2[countD2] = i;
 				}	
 			}					
 		}else if(NR == row){
@@ -234,30 +236,33 @@ possibleEatingPositions(){
 	}END{
 		blockD1 = 0;
 		oponentCountD1 = 0;
-		blockD1 = 0;
+		blockD2 = 0;
 		oponentCountD2 = 0;
-		for(i=row-1;i>=1;i--){
+		for(i=countD1;i>=1;i--){
 			#D1
-			if(valuesD1[i] == p)
-				blockD1 = 1
-			else if(valuesD1[i] == oponent)
-				oponentCountD1++;
-			
-			if(!blockD1 && oponentCountD1 == 1 && valuesD1[i] == 0)
+			if(valuesD1[i] == p){
+				blockD1 = 1;
+			}else if(valuesD1[i] == oponent){
+				oponentCountD1++;				
+			}
+			if(!blockD1 && oponentCountD1 == 1 && valuesD1[i] == 0){
 				print rev[columnsD1[i]],i;
+			}
+		}
+		for(i=countD2;i>=1;i--){
 			#D2
-			if(valuesD2[i] == p)
+			if(valuesD2[i] == p){
 				blockD2 = 1
-			else if(valuesD2[i] == oponent)
+			}else if(valuesD2[i] == oponent){
 				oponentCountD2++;
+			}
 			
-			if(!blockD2 && oponentCountD2 == 1 && valuesD2[i] == 0)
-				print rev[columnsD2[i]],i;					
+			if(!blockD2 && oponentCountD2 == 1 && valuesD2[i] == 0){
+				print rev[columnsD2[i]],i;
+			}
 		}
 	}' board.txt
 }
-
-
 #
 #
 #

@@ -50,7 +50,14 @@ function hasFood(){
 		n=$(expr $n + 1)	
 	done
 	num_col_atual=${numeros[$1]}
-	if isEmpty ${letras[$(expr $num_col_atual - 2)]} $(expr $2 - 2) && [ $(abs $(getValue ${letras[$(expr $num_col_atual - 1)]} $(expr $2 - 1))) -eq  $(otherPlayer $3) ]; then
+	value=$(getValue $1 $2)
+	if [ $value -lt 0 ]; then
+		if [ $(possibleEatingPositions $1 $2 $(abs $3) | wc -w) -gt 0 ];then
+			return 0
+		else
+			return 1
+		fi
+	elif isEmpty ${letras[$(expr $num_col_atual - 2)]} $(expr $2 - 2) && [ $(abs $(getValue ${letras[$(expr $num_col_atual - 1)]} $(expr $2 - 1))) -eq  $(otherPlayer $3) ]; then
 		return 0
 	elif isEmpty ${letras[$(expr $num_col_atual - 2)]} $(expr $2 + 2) && [ $(abs $(getValue ${letras[$(expr $num_col_atual - 1)]} $(expr $2 + 1))) -eq  $(otherPlayer $3) ]; then
 		return 0
