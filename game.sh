@@ -2,10 +2,11 @@
 source board.sh
 source util.sh
 source rules.sh
-#initBoard
+initBoard
 jogada=0
 
 function jogar(){
+	
 	retorno=$(isCorrectMove $1 $2 $3 $4 $5)
 	validacao=$(echo $retorno | cut -f1 -d" ")
 	coluna=$(echo $retorno | cut -f2 -d" ")
@@ -80,15 +81,19 @@ function victory(){
 function MENU_JOGADOR(){
 	printTurno $1
 	echo "Digite a origem: "
-	read lo no
+	read origem
+	lo=$(echo $origem | cut -c1)
+	no=$(echo $origem | cut -c2)
+
 	#Desenha tabuleiro marcando a peça origem
 	draw_board $lo $no
 	printTurno $1
 	echo "Digite o destino: "
-	read ld nd
+	read destino
+	ld=$(echo $destino | cut -c1)
+	nd=$(echo $destino | cut -c2)
 	
 	saida=$(jogar $lo $no $ld $nd $1)
-	echo "$saida"
 	continuar=$(echo "$saida" | cut -f1 -d" " )
 	novaColunaOrigem=$(echo "$saida" | cut -f2 -d" " )
 	novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
@@ -99,7 +104,6 @@ function MENU_JOGADOR(){
 		echo "Jogada inválida!"
 		echo "Ex.: a 3"
 		read -p "Digite [ENTER] para continuar"
-
 	else
 		
 		if [ $(echo "$saida" | wc -w ) -eq 3 ]
@@ -117,11 +121,19 @@ function MENU_JOGADOR(){
 					saida=$(jogar $novaColunaOrigem $novaLinhaOrigem $nld $nnd $1)
 					echo "$saida"
 					continuar=$(echo "$saida" | cut -f1 -d" " )
-					novaColunaOrigem=$(echo "$saida" | cut -f2 -d" " )
-					novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
+					
+					if [ "$continuar" = "true" ]
+					then
+						novaColunaOrigem=$(echo "$saida" | cut -f2 -d" " )
+					    novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
 					else
-						#Para sair do laço
-						novaLinhaOrigem=$(echo "true")		
+						echo "Jogada inválida!"
+						echo "Ex.: a 3"
+						read -p "Digite [ENTER] para continuar"
+					fi
+				else
+					#Para sair do laço
+					novaLinhaOrigem=$(echo "true")		
 				fi
 			done
 		
@@ -130,6 +142,18 @@ function MENU_JOGADOR(){
 		#proximo jogador
 		jogada=$(expr "$jogada" + 1)
 	fi
+}
+
+function MENU_VENCEU(){
+	say "You Win!"
+	clear
+	if [ $1 -eq 1 ]
+	then
+		tput setaf 2; cat jogador_1_venceu.txt
+	else
+		tput setaf 2; cat jogador_2_venceu.txt
+	fi
+	
 }
 
 function DAMA(){
@@ -143,18 +167,73 @@ function DAMA(){
 			MENU_JOGADOR 1
 			v=$(victory 1)
 			if [ "$v" = "victory" ]; then
-				echo "JOGADOR 1 VENCEU!"
-				 break
+				MENU_VENCEU 1
+				read -p "Digite [ENTER] para continuar"
+				break
 			fi
 		else
 			MENU_JOGADOR 2
 			v=$(victory 2)
 			if [ "$v" = "victory" ]; then
-				echo "JOGADOR 1 VENCEU!"
-				 break
+				MENU_VENCEU 2
+				read -p "Digite [ENTER] para continuar"
+				break
 			fi
 		fi
 	done
 }
 
-DAMA
+function equipe(){
+	clear
+	echo "EQUIPE: "
+	echo "	- André"
+	echo "	- Jonas"
+	echo "	- Sergio"
+	echo "	- Rômulo"
+
+	read -p "Digite [ENTER] para continuar"
+}
+
+function regras(){
+	clear
+	cat regras.txt
+	read -p "Digite [ENTER] para continuar"
+}
+
+
+function opcoes(){
+	clear
+	echo -e "\033[0m"
+
+	echo "Escolha uma das opções"
+	echo "1 - JOGAR"
+	echo "2 - REGRAS/INSTRUNÇÕES"
+	echo "3 - EQUIPE"
+	echo "4 - SAIR"
+}
+
+function MENU_GAME() {
+	while true
+	do
+
+		opcoes
+		read OP
+		case $OP in 
+		1)
+			DAMA
+		;;
+		2)
+			regras
+		;;
+		3)
+			equipe
+		;;
+		4)
+			xcowsay "Espero que tenham gostado! Até logo"
+			exit
+		;;
+		esac
+	done
+}
+
+MENU_GAME

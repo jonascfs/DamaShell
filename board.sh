@@ -1,7 +1,6 @@
 #!/bin/bash
 source util.sh
 
-
 function draw_board(){
   clear
   vetor=(_ a b c d e f g h)
