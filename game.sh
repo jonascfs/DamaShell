@@ -2,6 +2,8 @@
 source board.sh
 source util.sh
 source rules.sh
+source machine.sh
+
 initBoard
 jogada=0
 
@@ -147,6 +149,38 @@ function MENU_JOGADOR(){
 	fi
 }
 
+function MENU_JOGADOR_IA(){
+	printTurno $1
+		
+	retorno=$(machine $1)
+	lo=$(echo "$retorno" | cut -f1 -d" ")
+	no=$(echo "$retorno" | cut -f2 -d" ")
+	ld=$(echo "$retorno" | cut -f3 -d" ")
+	nod=$(echo "$retorno" | cut -f4 -d" ")
+
+	#Desenha tabuleiro marcando a peça origem
+	draw_board $lo $no
+	xcowsay -t 1 "Vou colocar a peça $no$lo em $nd$ld"
+
+	saida=$(jogar $lo $no $ld $nd $1)
+	continuar=$(echo "$saida" | cut -f1 -d" " )
+	novaColunaOrigem=$(echo "$saida" | cut -f2 -d" " )
+	novaLinhaOrigem=$(echo "$saida" | cut -f3 -d" " )
+
+
+	if [ "$continuar" = "false" ]
+	then
+		echo "Jogada inválida!"
+		echo "Ex.: a3"
+		read -p "Digite [ENTER] para continuar"
+	else
+		#proximo jogador
+		jogada=$(expr "$jogada" + 1)
+
+	fi
+}
+
+
 function MENU_VENCEU(){
 	say "You Win!"
 	clear
@@ -186,6 +220,33 @@ function DAMA(){
 	done
 }
 
+function DAMA_IA(){
+	while [ true ]
+	do
+		#Desenha tabuleiro sem marcar peça
+		draw_board "_" 0
+
+		if [ `expr $jogada % 2` -eq 0 ]
+		then
+			MENU_JOGADOR 1
+			v=$(victory 1)
+			if [ "$v" = "victory" ]; then
+				MENU_VENCEU 1
+				read -p "Digite [ENTER] para continuar"
+				break
+			fi
+		else
+			MENU_JOGADOR_IA 2
+			v=$(victory 2)
+			if [ "$v" = "victory" ]; then
+				MENU_VENCEU 2
+				read -p "Digite [ENTER] para continuar"
+				break
+			fi
+		fi
+	done
+}
+
 function equipe(){
 	clear
 	echo "EQUIPE: "
@@ -207,12 +268,13 @@ function regras(){
 function opcoes(){
 	clear
 	echo -e "\033[0m"
-
-	echo "Escolha uma das opções"
-	echo "1 - JOGAR"
-	echo "2 - REGRAS/INSTRUÇÕES"
-	echo "3 - EQUIPE"
-	echo "4 - SAIR"
+	cat banner_menu.txt
+	echo -e "\n\nEscolha uma das opções"
+	echo "1 - JOGAGOR X JOGADOR"
+	echo "2 - JOGAGOR X IA(MIMOSA)"
+	echo "3 - REGRAS/INSTRUÇÕES"
+	echo "4 - EQUIPE"
+	echo "5 - SAIR"
 }
 
 function MENU_GAME() {
@@ -226,12 +288,15 @@ function MENU_GAME() {
 			DAMA
 		;;
 		2)
-			regras
+			DAMA_IA
 		;;
 		3)
-			equipe
+			regras
 		;;
 		4)
+			equipe
+		;;
+		5)
 			xcowsay "Espero que tenham gostado! Até logo"
 			exit
 		;;

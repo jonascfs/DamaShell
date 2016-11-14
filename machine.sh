@@ -100,7 +100,7 @@ function machine(){
 		done
 
 		if [ "$new_col" = "" ]; then
-			moves=$(getMoves $col $line)
+			moves=$(getMoves $col $line $1)
 			for move in $moves
 			do
 				new_col=$(echo "$move" | cut -f1 -d' ')
@@ -119,4 +119,4 @@ function machine(){
 	echo "false"
 }
 
-machine 1
+machine 2
