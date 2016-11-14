@@ -13,8 +13,7 @@ function abs(){
 		echo "$(expr $1 \* -1)"
 	else
 		echo "$1"
-	fi
-	
+	fi	
 }
 
 function otherPlayer(){
@@ -34,6 +33,7 @@ function hasPosition(){
 		return 1 #false
 	fi
 }
+
 
 function hasFood(){
 	#$1 coluna atual, $2 linha atual, $3 jogador
@@ -62,19 +62,20 @@ function hasFood(){
 
 }
 
-function damaMove(){
+
+function damaMove() {
 	#$1 coluna atual, #$2 linha atual, #$3 nova coluna, #$4 nova linha, $5 jogador da vez
 	pieces=$(getDiagonalPieces $1 $2 $3 $4)
 	len_pieces=$(echo $pieces | wc -w)
 	if [ $len_pieces -le 3 ]; then
 		if [ $len_pieces -eq 2 ] &&  [ $(echo $pieces | cut -f2 -d' ') -eq 0 ]; then
 			echo "true"
-		elif if [ $len_pieces -eq 3 ] &&  [ $(echo $pieces | cut -f2 -d' ') -eq 0 ]; then
+		elif [ $len_pieces -eq 3 ] &&  [ $(echo $pieces | cut -f2 -d' ') -eq 0 ]; then
 			comida=$(echo $pieces | cut -f3 -d' ')
 			jogador_comida=$(abs $(echo $comida | cut -f1 -d'_'))
 			coluna_comida=$(echo $comida | cut -f2 -d'_')
 			linha_comida=$(echo $comida | cut -f3 -d'_')
-			if [ $jogador_comida -eq $(otherJogador $5) ]; then
+			if [ $jogador_comida -eq $(otherPlayer $5) ]; then
 				echo "true $coluna_comida $linha_comida"
 			else
 				echo "false"
@@ -104,11 +105,10 @@ function isCorrectPosition(){
 
 	num_col_atual=${numeros[$1]}
 	num_col_nova=${numeros[$3]}
-
-	if [ $(getValue $1 $2) -lt 0 ]; then		
-		damaMove $1 $2 $3 $4 $5
-	elif [ $5 -eq $JOGADOR1 ] && [ $4 -eq $(expr $2 - 1) ]
-	then
+	
+	if [ $(getValue $1 $2) -lt 0 ]; then
+		damaMove $1 $2 $3 $4 $5	
+	elif [ $5 -eq $JOGADOR1 ] && [ $4 -eq $(expr $2 - 1) ]; then
 		if [ $num_col_nova -eq $(expr $num_col_atual - 1) ] || [ $num_col_nova -eq $(expr $num_col_atual + 1) ]; then
 			echo "true"
 		else 
