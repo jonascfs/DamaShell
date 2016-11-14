@@ -195,7 +195,9 @@ function equipe(){
 }
 
 function regras(){
-	
+	clear
+	cat regras.txt
+	read -p "Digite [ENTER] para continuar"
 }
 
 
@@ -221,12 +223,13 @@ function MENU_GAME() {
 			DAMA
 		;;
 		2)
-			
+			regras
 		;;
 		3)
 			equipe
 		;;
 		4)
+			xcowsay "Espero que tenham gostado! Até logo"
 			exit
 		;;
 		esac
