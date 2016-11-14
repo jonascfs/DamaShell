@@ -1,4 +1,6 @@
 #!/bin/bash
+#CAUTION! THIS FILE CONTANIS A VERY BAD ENGLISH!
+
 
 initBoard(){
 echo -e "2 0 2 0 2 0 2 0
@@ -150,6 +152,95 @@ countPieces(){
 		print counter		
 	}' board.txt
 }
+
+possibleEatingPositions(){
+#this functions returns all the possible positions for a dama move after "eat" an oponent
+#D1      D2
+#  .   .
+#    p
+#  .   .
+#D3      D4
+
+	awk -v col=$1 -v row=$2 -v p=$3 'BEGIN {
+		letras["a"] = 1;letras["b"] = 2;letras["c"] = 3;letras["d"] = 4;
+		letras["e"] = 5;letras["f"] = 6;letras["g"] = 7;letras["h"] = 8;
+		
+		rev[1] = "a";rev[2] = "b";rev[3] = "c";rev[4] = "d";
+		rev[5] = "e";rev[6] = "f";rev[7] = "g";rev[8] = "h";
+		
+		oponent=(p==1)?2:1;
+	}{
+		if(NR < row){
+			for(i=1;i<=NF;i++){
+				current =$i>=0?$i:-1*$i;
+				#D1				
+				if(i == letras[col] - (row - NR)){
+					valuesD1[NR] = current;
+					columnsD1[NR] = i;
+				#D2
+				}else if(i == letras[col] + (row - NR)){
+					valuesD2[NR] = current;
+					columnsD2[NR] = i;
+				}	
+			}					
+		}else if(NR == row){
+			blockD4 = 0;
+			oponentCountD4 = 0;
+			blockD3 = 0;
+			oponentCountD3 = 0;
+		}else{
+			for(i=1;i<=NF;i++){
+				current =$i>=0?$i:-1*$i;
+				#D4
+				if(i == (NR - row) + letras[col]){
+					if(current == p)
+						blockD4 = 1;
+					else if(current == oponent)
+						oponentCountD4++;					
+				
+					if(!blockD4 && oponentCountD4 == 1 && current == 0){
+						print rev[i],NR;
+					}
+
+				#D3
+				}else if(i == letras[col] - (NR - row)){
+					if(current == p)
+						blockD3 = 1;
+					else if(current == oponent)
+						oponentCountD3++;					
+				
+					if(!blockD3 && oponentCountD3 == 1 && current == 0){
+						print rev[i],NR;
+					}		
+				}
+			}
+		}
+	}END{
+		blockD1 = 0;
+		oponentCountD1 = 0;
+		blockD1 = 0;
+		oponentCountD2 = 0;
+		for(i=row-1;i>=1;i--){
+			#D1
+			if(valuesD1[i] == p)
+				blockD1 = 1
+			else if(valuesD1[i] == oponent)
+				oponentCountD1++;
+			
+			if(!blockD1 && oponentCountD1 == 1 && valuesD1[i] == 0)
+				print rev[columnsD1[i]],i;
+			#D2
+			if(valuesD2[i] == p)
+				blockD2 = 1
+			else if(valuesD2[i] == oponent)
+				oponentCountD2++;
+			
+			if(!blockD2 && oponentCountD2 == 1 && valuesD2[i] == 0)
+				print rev[columnsD2[i]],i;					
+		}
+	}' board.txt
+}
+
 
 #
 #
