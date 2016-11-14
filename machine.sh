@@ -6,15 +6,16 @@ declare -a letras
 declare -A numeros	
 letras=(x a b c d e f g h)
 n="0"
+
 for i in ${letras[@]}
 do
 	numeros[$i]=$n
 	n=$(expr $n + 1)	
 done
 
-
 function hasThreat (){
 	#$1 col, $2 linha, $3 jogador, $4 col_coordenada, $5 linha_coordenada
+	num_col_atual=${numeros[$1]}
 	if hasPosition ${letras[$(expr $num_col_atual + $4)]} $(expr $2 + $5) && [ $(abs $(getValue ${letras[$(expr $num_col_atual + $4)]} $(expr $2 + $4))) -eq  $(otherPlayer $3) ] && isEmpty ${letras[$(expr $num_col_atual - $4)]} $(expr $2 - $5); then
 		return 0
 	else 
@@ -24,6 +25,7 @@ function hasThreat (){
 
 function getMoves(){
 	#$1 col, $2 linha
+	num_col_atual=${numeros[$1]}
 	if isEmpty ${letras[$(expr $num_col_atual + 1)]} $(expr $2 + 1) ; then
 		echo -e "${letras[$(expr $num_col_atual + 1)]} $(expr $2 + 1)\n"	
 	fi
@@ -40,7 +42,6 @@ function getMoves(){
 
 function isFood(){
 	#$1 coluna, $2 linha, $3 jogador
-	num_col_atual=${numeros[$1]}
 	if hasThreat $1 $2 $3 1 1 ; then
 		return 0
 	elif hasThreat $1 $2 $3 1 -1 ; then
@@ -74,10 +75,11 @@ function getFoods(){
 
 function machine(){
 	#$1 jogador
-	pieces=$(getPieces)
+	pieces=$(getPieces $1)
 	IFS=$'\n'		
 	new_col=""
 	new_line=""
+
 	for piece in $pieces
 	do
 		col=$(echo "$piece" | cut -f1 -d' ')
@@ -89,22 +91,30 @@ function machine(){
 			new_line=$(echo "$move" | cut -f2 -d' ')
 			col_comida=$(echo "$move" | cut -f3 -d' ')
 			line_comida=$(echo "$move" | cut -f4 -d' ')
-			if ! hasThreat $new_col $new_line $1 ; then				
-				echo "$new_col $new_line $col_comida $line_comida"
-				return
+			if ! isFood $new_col $new_line $1 ; then				
+				echo "$col $line $new_col $new_line $col_comida $line_comida"
+				return 0
+			fi
 		done
+
 		if [ "$new_col" = "" ]; then
 			moves=$(getMoves $col $line)
 			for move in $moves
 			do
 				new_col=$(echo "$move" | cut -f1 -d' ')
 				new_line=$(echo "$move" | cut -f2 -d' ')
-				if ! hasThreat $new_col $new_line $1 ; then					
-					echo "$new_col $new_line"
-					return
+				if ! isFood $new_col $new_line $1 ; then					
+					echo "$col $line $new_col $new_line"
+					return 0
 				fi
-			done
-
+			done			
+		else
+			echo "$col $line $new_col $new_line $col_comida $line_comida"
+			return 0
 		fi
+
 	done
+	echo "false"
 }
+
+machine 1
