@@ -166,8 +166,6 @@ getPieces(){
 			if(currentP == p)
 				print rev[i],NR		
 		}	
-	}END{
-		print counter		
 	}' board.txt
 }
 
