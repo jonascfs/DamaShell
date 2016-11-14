@@ -153,6 +153,24 @@ countPieces(){
 	}' board.txt
 }
 
+getPieces(){
+	awk -v p=$1 'BEGIN{
+		letras["a"] = 1;letras["b"] = 2;letras["c"] = 3;letras["d"] = 4;
+		letras["e"] = 5;letras["f"] = 6;letras["g"] = 7;letras["h"] = 8;
+		
+		rev[1] = "a";rev[2] = "b";rev[3] = "c";rev[4] = "d";
+		rev[5] = "e";rev[6] = "f";rev[7] = "g";rev[8] = "h";
+	}{
+		for(i=1;i<=NF;i++){
+			currentP = $i >=0?$i:-1*$i;
+			if(currentP == p)
+				print rev[i],NR		
+		}	
+	}END{
+		print counter		
+	}' board.txt
+}
+
 possibleEatingPositions(){
 #this functions returns all the possible positions for a dama move after "eat" an oponent
 #D1      D2
