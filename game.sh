@@ -156,11 +156,11 @@ function MENU_JOGADOR_IA(){
 	lo=$(echo "$retorno" | cut -f1 -d" ")
 	no=$(echo "$retorno" | cut -f2 -d" ")
 	ld=$(echo "$retorno" | cut -f3 -d" ")
-	nod=$(echo "$retorno" | cut -f4 -d" ")
+	nd=$(echo "$retorno" | cut -f4 -d" ")
 
 	#Desenha tabuleiro marcando a peça origem
 	draw_board $lo $no
-	xcowsay -t 1 "Vou colocar a peça $no$lo em $nd$ld"
+	xcowsay -t 1 "Vou colocar a peça $lo$no em $ld$nd"
 
 	saida=$(jogar $lo $no $ld $nd $1)
 	continuar=$(echo "$saida" | cut -f1 -d" " )
